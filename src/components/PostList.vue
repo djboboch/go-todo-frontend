@@ -6,23 +6,23 @@
 </template>
 
 <script lang="ts">
-import Post, { PostData } from "./elements/Post.vue";
+import Post, { PostData } from "./basic/Post.vue";
 
 let postList: PostData[] = [
   {
     id: "1",
-    header: "Test header",
     content: "Example content of the body",
+    isItemFinished: false
   },
   {
     id: "2",
-    header: "Test header 2",
     content: "Example content of the body",
+    isItemFinished: true
   },
   {
     id: "3",
-    header: "Test header 3",
     content: "Example content of the body",
+    isItemFinished: false
   },
 ];
 
