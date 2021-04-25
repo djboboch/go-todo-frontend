@@ -1,5 +1,5 @@
 <template>
-  <div class="col-span-6 col-start-4 flex flex-col">
+  <div class=" grid grid-cols-10 col-start-2 gap-x-6">
     <Post v-for="post in postList" :key="post.id" 
     :postData="post"/>
   </div>
