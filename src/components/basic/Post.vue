@@ -3,10 +3,8 @@
     class="col-span-5 border rounded mb-4 pt-4 pb-4 px-4 flex justify-between items-center relative shadow-lg"
   >
     <div>
-      <span
-        class="text-sm font-light"
-        :class="{ 'done-text': postData.isItemFinished }"
-        >{{ postData.content }}</span
+      <span class="text-sm font-light" :class="{ 'done-text': postData }">
+        {{ postData.content }}</span
       >
     </div>
     <div
@@ -49,11 +47,6 @@ export interface PostData {
 }
 
 export default {
-  data() {
-    return {
-      postData: this.postData,
-    };
-  },
   props: {
     postData: {
       type: Object as PropType<PostData>,
@@ -61,8 +54,9 @@ export default {
     },
   },
   methods: {
-    toggleTodo() {
-      this.postData.isItemFinished = !this.postData.isItemFinished;
+    toggleTodo(): void {
+      (this as any).postData.isItemFinished = !(this as any).postData
+        .isItemFinished;
     },
   },
 };
