@@ -27,8 +27,9 @@ deploy:
     url: http://todo.chrupek.tech
   image: roffe/kubectl:v1.13.2
   script:
-   - kubectl delete --ignore-not-found=true secret gitlab-auth
-   - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_REGISTRY_USER --docker-password=$KUBE_REGISTRY_PASS
-   - cat deployment.yaml | envsubst | kubectl apply -f -
+    - echo $KUBE_REGISTRY_USER; echo $KUBE_REGISTRY_PASS
+  #  - kubectl delete --ignore-not-found=true secret gitlab-auth
+  #  - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_REGISTRY_USER --docker-password=$KUBE_REGISTRY_PASS
+  #  - cat deployment.yaml | envsubst | kubectl apply -f -
   only:
     - master
