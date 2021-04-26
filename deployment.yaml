@@ -5,7 +5,6 @@ metadata:
 spec:
   selector:
     app: go-todo-frontend
-    tier: frontend
   ports:
     - protocol: TCP
       port: 80
@@ -25,7 +24,6 @@ spec:
     metadata:
       labels:
         app: go-todo-frontend
-        tier: frontend
     spec:
       containers:
       - name: go-todo-frontend
