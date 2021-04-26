@@ -45,7 +45,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: */todo
+  - host: todo.chrupek.tech
     http:
       paths:
         - backend:
