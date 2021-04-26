@@ -4,30 +4,31 @@ stages:
 
 variables:
   DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  
+
 
 build:
   stage: build
-  image: docker:19.03.12
+  image: docker:stable
   services:
-    - docker:19.03.12-dind
+    - docker:dind
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker info
   script:
     - docker build -t $DOCKER_IMAGE_TAG .
     - docker push $DOCKER_IMAGE_TAG
-  
+
 deploy:
   stage: deploy
   environment:
     name: production
     url: http://todo.chrupek.tech
-  image: roffe/kubectl:latest
+  image: roffe/kubectl:v1.13.2
   script:
-    - kubectl delete --ignore-not-found=true secret gitlab-auth
-    - kubectl create secret docker-registry gitlab-auth --docker-service=$CI_REGISTRY --docker-username=$KUBE_REGISTRY_LOGIN --docker-password=$KUBE_REGISTRY_PASSWORD
-    - cat deployment.yaml | envsubst | kubectl apply -f -
+   - kubectl delete --ignore-not-found=true secret gitlab-auth
+   - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_REGISTRY_USER --docker-password=$KUBE_REGISTRY_PASSWORD
+   - cat deployment.yaml | envsubst | kubectl apply -f -
+  only:
+    - master
