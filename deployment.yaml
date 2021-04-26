@@ -47,7 +47,8 @@ spec:
   - host: todo.chrupek.tech
     http:
       paths:
-        - path: /
+        - pathType: Prefix
+          path: "/"
           backend:
             service:
               name: go-todo-front-svc
