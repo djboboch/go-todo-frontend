@@ -47,7 +47,7 @@ review:
   environment:
     name: dupa
     url: http://todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-    on_stop: stop_review
+    # on_stop: stop_review
   image: roffe/kubectl:v1.13.2
   script:
   - echo $KUBE_PULL_USER;
