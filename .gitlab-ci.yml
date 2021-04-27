@@ -20,6 +20,8 @@ build:
   script:
     - docker build -t $DOCKER_IMAGE_TAG .
     - docker push $DOCKER_IMAGE_TAG
+  only:
+    - master
 
 deploy:
   stage: deploy
@@ -48,7 +50,7 @@ review:
     on_stop: stop_review
   image: roffe/kubectl:v1.13.2
   script:
-  - export
+  - echo $KUBE_PULL_USER;
   #  - kubectl delete --ignore-not-found=true secret gitlab-auth
   #  - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_PULL_USER --docker-password=$KUBE_PULL_PASS
   #  - cat deployment.yaml | envsubst | kubectl apply -f -
