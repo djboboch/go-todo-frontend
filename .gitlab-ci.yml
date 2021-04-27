@@ -54,6 +54,8 @@ review:
   #  - kubectl delete --ignore-not-found=true secret gitlab-auth
   #  - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_PULL_USER --docker-password=$KUBE_PULL_PASS
   #  - cat deployment.yaml | envsubst | kubectl apply -f -
+  only:
+    - branches
   except:
     - master
 
