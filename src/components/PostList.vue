@@ -17,7 +17,7 @@ let postList: PostData[] = [
   {
     id: "2",
     content: "Example content of the body",
-    isItemFinished: true
+    isItemFinished: false
   },
   {
     id: "3",
