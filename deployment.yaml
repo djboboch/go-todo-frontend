@@ -34,6 +34,9 @@ spec:
             cpu: "0.2"
         ports:
         - containerPort: 80
+      imagePullSecrets:
+        - name: gitlab-auth
+
 
 ---
 apiVersion: networking.k8s.io/v1
