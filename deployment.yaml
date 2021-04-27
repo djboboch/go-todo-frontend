@@ -54,6 +54,6 @@ spec:
           path: "/"
           backend:
             service:
-              name: go-todo-front-${DEPLOY_SUFFIX}
+              name: go-todo-frontend-${DEPLOY_SUFFIX}
               port: 
                 number: 80
