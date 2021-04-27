@@ -24,6 +24,11 @@ let postList: PostData[] = [
     content: "Example content of the body",
     isItemFinished: false
   },
+    {
+    id: "4",
+    content: "helo world",
+    isItemFinished: false
+  },
 ];
 
 export default {
