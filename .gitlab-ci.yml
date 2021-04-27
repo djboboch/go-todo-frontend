@@ -29,7 +29,8 @@ deploy:
   image: roffe/kubectl:v1.13.2
   script:
    - kubectl delete --ignore-not-found=true secret gitlab-auth
-   - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_REGISTRY_LOGIN --docker-password=$KUBE_REGISTRY_PASS
+   - echo $CI_REGISTRY; echo $KUBE_PULL_USER; echo $KUBE_PULL_PASS;
+   - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_PULL_USER --docker-password=$KUBE_PULL_PASS
    - cat deployment.yaml | envsubst | kubectl apply -f -
   only:
     - master
