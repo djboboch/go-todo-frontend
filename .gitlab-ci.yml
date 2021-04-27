@@ -45,7 +45,7 @@ review:
     DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
     DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
   environment:
-    name: review/$CI_COMMIT_REF_SLUG
+    name: production
     url: http://todo-$CI_COMMIT_REF_SLUG.chrupek.tech
     on_stop: stop_review
   image: roffe/kubectl:v1.13.2
