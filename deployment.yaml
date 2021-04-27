@@ -16,7 +16,7 @@ kind: Deployment
 metadata:
   name: go-todo-frontend-${DEPLOY_SUFFIX}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: go-todo-frontend-${DEPLOY_SUFFIX}
