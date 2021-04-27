@@ -45,7 +45,7 @@ review:
     DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
     DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
   environment:
-    name: production
+    name: dupa
     url: http://todo-$CI_COMMIT_REF_SLUG.chrupek.tech
     on_stop: stop_review
   image: roffe/kubectl:v1.13.2
@@ -57,20 +57,20 @@ review:
   except:
     - master
 
-stop_review:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-    DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
-    DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    action: stop
-  image: roffe/kubectl:v1.13.2
-  script:
-    - kubectl delete service/go-todo-frontend-$DEPLOY_SUFFIX
-    - kubectl delete deploy/go-todo-frontend-$DEPLOY_SUFFIX
-    - kubectl delete ingress/go-todo-ingress-$DEPLOY_SUFFIX
-  when: manual
-  except:
-    - master
+# stop_review:
+#   stage: deploy
+#   variables:
+#     GIT_STRATEGY: none
+#     DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
+#     DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     action: stop
+#   image: roffe/kubectl:v1.13.2
+#   script:
+#     - kubectl delete service/go-todo-frontend-$DEPLOY_SUFFIX
+#     - kubectl delete deploy/go-todo-frontend-$DEPLOY_SUFFIX
+#     - kubectl delete ingress/go-todo-ingress-$DEPLOY_SUFFIX
+#   when: manual
+#   except:
+#     - master
