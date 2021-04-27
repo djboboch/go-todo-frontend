@@ -33,8 +33,8 @@ deploy:
     url: http://todo.chrupek.tech
   image: roffe/kubectl:v1.13.2
   script:
-   - kubectl delete --ignore-not-found=true secret gitlab-auth
-   - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_PULL_USER --docker-password=$KUBE_PULL_PASS
+   - kubectl delete --ignore-not-found=true secret gitlab-registry
+   - kubectl create secret docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
    - cat deployment.yaml | envsubst | kubectl apply -f -
   only:
     - master
@@ -50,29 +50,28 @@ review:
     # on_stop: stop_review
   image: roffe/kubectl:v1.13.2
   script:
-  - echo $KUBE_PULL_USER
-  #  - kubectl delete --ignore-not-found=true secret gitlab-auth
-  #  - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$KUBE_PULL_USER --docker-password=$KUBE_PULL_PASS
-  #  - cat deployment.yaml | envsubst | kubectl apply -f -
+   - kubectl delete --ignore-not-found=true secret gitlab-registry
+   - kubectl create secret docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
+   - cat deployment.yaml | envsubst | kubectl apply -f -
   only:
     - branches
   except:
     - master
 
-# stop_review:
-#   stage: deploy
-#   variables:
-#     GIT_STRATEGY: none
-#     DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
-#     DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-#   environment:
-#     name: review/$CI_COMMIT_REF_SLUG
-#     action: stop
-#   image: roffe/kubectl:v1.13.2
-#   script:
-#     - kubectl delete service/go-todo-frontend-$DEPLOY_SUFFIX
-#     - kubectl delete deploy/go-todo-frontend-$DEPLOY_SUFFIX
-#     - kubectl delete ingress/go-todo-ingress-$DEPLOY_SUFFIX
-#   when: manual
-#   except:
-#     - master
+stop_review:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
+    DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  image: roffe/kubectl:v1.13.2
+  script:
+    - kubectl delete service/go-todo-frontend-$DEPLOY_SUFFIX
+    - kubectl delete deploy/go-todo-frontend-$DEPLOY_SUFFIX
+    - kubectl delete ingress/go-todo-ingress-$DEPLOY_SUFFIX
+  when: manual
+  except:
+    - master
