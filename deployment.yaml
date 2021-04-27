@@ -15,6 +15,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: go-todo-frontend-${DEPLOY_SUFFIX}
+  annotations:
+    app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
+    app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
 spec:
   replicas: 1
   selector:
@@ -24,6 +27,9 @@ spec:
     metadata:
       labels:
         app: go-todo-frontend-${DEPLOY_SUFFIX}
+      annotations:
+        app.gitlab.com/app: ${CI_PROJECT_PATH_SLUG}
+        app.gitlab.com/env: ${CI_ENVIRONMENT_SLUG}
     spec:
       containers:
       - name: go-todo-frontend-${DEPLOY_SUFFIX}
