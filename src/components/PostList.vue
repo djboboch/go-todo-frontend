@@ -1,39 +1,23 @@
 <template>
   <div class=" grid grid-cols-10 col-start-2 gap-x-6">
-    <Post v-for="post in postList" :key="post.id" 
-    :postData="post"/>
+    <PostItem v-for="post in postList" :key="post.id"
+    :postData="post" @post-delete="$emit('post-delete',$event)"/>
   </div>
 </template>
 
 <script lang="ts">
-import Post, { PostData } from "./basic/Post.vue";
-
-let postList: PostData[] = [
-  {
-    id: "1",
-    content: "Example content of the body",
-    isItemFinished: false
-  },
-  {
-    id: "2",
-    content: "Example content of the body",
-    isItemFinished: false
-  },
-  {
-    id: "3",
-    content: "Example content of the body",
-    isItemFinished: false
-  },
-];
+import PostItem, {PostData} from "./basic/PostItem.vue";
+import {PropType} from "@vue/runtime-core";
 
 export default {
-  data() {
-    return {
-      postList,
-    };
+  props: {
+    postList: {
+      type: Array as PropType<Array<PostData>>,
+      required: true
+    }
   },
   components:{
-      Post
+      PostItem
   }
 };
 </script>

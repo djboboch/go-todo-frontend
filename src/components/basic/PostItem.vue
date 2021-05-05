@@ -10,6 +10,7 @@
     <div
       class="delete-marker absolute"
       :class="{ active: postData.isItemFinished }"
+      @click="$emit('post-delete', postData.id)"
     >
       <svg class="svg-icon" viewBox="0 0 20 20">
         <path
@@ -38,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { PropType } from "@vue/runtime-core";
+import {PropType} from "@vue/runtime-core";
 
 export interface PostData {
   id: string;
@@ -62,7 +63,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $animation-duration: 300ms;
 
 .done-text {
