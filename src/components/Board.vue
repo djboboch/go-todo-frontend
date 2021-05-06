@@ -7,7 +7,7 @@
       <slot></slot>
     </div>
 
-    <ItemAdder />
+    <ItemAdder @post-added="$emit('postAdded', $event)"/>
 
     <Button class="col-span-4 row-start-3 col-start-5 animate-bounce"> Add new Todo </Button>
   </main>
