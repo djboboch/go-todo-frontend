@@ -57,7 +57,23 @@ export default {
   methods: {
     toggleTodo(): void {
       (this as any).postData.isItemFinished = !(this as any).postData
-        .isItemFinished;
+          .isItemFinished;
+
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/v1/todo",
+          {
+            method: "PUT",
+            body: JSON.stringify(this.postData),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status == "ok"){
+              console.log(data.content)
+            }
+          })
+
     },
   },
 };
