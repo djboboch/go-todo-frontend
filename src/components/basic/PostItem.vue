@@ -3,7 +3,7 @@
     class="col-span-5 border rounded mb-4 pt-4 pb-4 px-4 flex justify-between items-center relative shadow-lg"
   >
     <div>
-      <span class="text-sm font-light" :class="{ 'done-text': postData }">
+      <span class="text-sm font-light" :class="{ 'done-text': postData.isItemFinished }">
         {{ postData.content }}</span
       >
     </div>
