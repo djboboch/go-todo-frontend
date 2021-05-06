@@ -14,6 +14,7 @@ import {CreatePostRequest} from "../models/requests";
 export default {
   name: "TodoAdder",
   components: {Button},
+  emits: ['postAdded'],
   data() {
     return {
       isOpen: {
@@ -30,7 +31,8 @@ export default {
         const createPostRequest: CreatePostRequest = {
           content: this.todoContent
         }
-        fetch(import.meta.env.VITE_BACKEND_URL + "/todo",
+
+        fetch(import.meta.env.VITE_BACKEND_URL + "/api/v1/todo",
             {
               method: "POST",
               body: JSON.stringify(createPostRequest),
@@ -38,8 +40,12 @@ export default {
                 "Content-Type": "application/json"
               }
             })
-            .then(response => response.text())
-            .then(data => console.log(data))
+            .then(response => response.json())
+            .then(data => {
+              if (data.status == "ok"){
+                this.$emit("postAdded", data.content)
+              }
+            })
       }
     }
   }
