@@ -2,9 +2,9 @@ stages:
   - build
   - deploy
 
-image: docker:20-dind
+image: docker:19-dind
 services:
-  - name: docker:20-dind
+  - name: docker:19-dind
     command: ["--tls=false"]
 
 variables:
