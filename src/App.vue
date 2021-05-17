@@ -25,7 +25,7 @@ export default defineComponent({
   },
   data() {
     return {
-      postItems: []
+      postItems: [] as PostData[]
     }
   },
   mounted() {

@@ -55,14 +55,14 @@ export default {
     },
   },
   methods: {
-    toggleTodo(): void {
+    toggleTodo() {
       (this as any).postData.isItemFinished = !(this as any).postData
           .isItemFinished;
 
       fetch(import.meta.env.VITE_BACKEND_URL + "/api/v1/todo",
           {
             method: "PUT",
-            body: JSON.stringify(this.postData),
+            body: JSON.stringify((this as any).postData),
             headers: {
               "Content-Type": "application/json"
             }
