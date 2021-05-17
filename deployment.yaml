@@ -58,5 +58,5 @@ spec:
           backend:
             service:
               name: go-todo-frontend-${DEPLOY_SUFFIX}
-              port: 
+              port:
                 number: 80
