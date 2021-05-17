@@ -11,7 +11,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
   APP_NAME: go-todo-frontend
-  CD_GIT_REPO: https://gitlab.com/chrupek.tech/go-todo/go-todo-frontend.git
+  CD_GIT_REPO: https://gitlab.com/chrupek.tech/go-todo/deployment.git
   CD_CHART_DIRECTORY: go-todo/frontend
   CD_MANIFEST_FILE: Chart.yaml
   IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
