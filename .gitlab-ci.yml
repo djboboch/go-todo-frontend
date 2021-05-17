@@ -3,10 +3,20 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  APP_NAME: go-todo-frontend
+  CD_GIT_REPO: git@gitlab.com:chrupek.tech/go-todo/deployment.git
+  CD_CHART_DIRECTORY: go-todo/frontend
+  CD_MANIFEST_FILE: Chart.yaml
+  IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
 
 
-build:
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+
+after_script:
+  - docker image prune -af
+
+build_image:
   stage: build
   image: docker:stable
   services:
@@ -14,62 +24,43 @@ build:
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker info
   script:
-    - docker build -t $DOCKER_IMAGE_TAG .
-    - docker push $DOCKER_IMAGE_TAG
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$IMAGE_TAG
+      .
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
 
-deploy:
-  stage: deploy
-  variables:
-    DEPLOY_SUFFIX: prod
-    DEPLOY_HOST: todo.chrupek.tech
-  environment:
-    name: production
-    url: http://todo.chrupek.tech
-  image: roffe/kubectl:v1.13.2
-  script:
-   - kubectl delete --ignore-not-found=true secret gitlab-registry
-   - kubectl create secret docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
-   - cat deployment.yaml | envsubst | kubectl apply -f -
-  only:
-    - master
-
-review:
-  stage: deploy
-  variables:
-    DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
-    DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    url: http://todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-    on_stop: stop_review
-  image: roffe/kubectl:v1.13.2
-  script:
-   - kubectl delete --ignore-not-found=true secret gitlab-registry
-   - kubectl create secret docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
-   - cat deployment.yaml | envsubst | kubectl apply -f -
-  only:
-    - branches
-  except:
-    - master
-
-stop_review:
+tag_latest_image:
   stage: deploy
   variables:
     GIT_STRATEGY: none
-    DEPLOY_SUFFIX: $CI_COMMIT_REF_SLUG
-    DEPLOY_HOST: todo-$CI_COMMIT_REF_SLUG.chrupek.tech
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    action: stop
-  image: roffe/kubectl:v1.13.2
   script:
-    - kubectl delete service/go-todo-frontend-$DEPLOY_SUFFIX
-    - kubectl delete deploy/go-todo-frontend-$DEPLOY_SUFFIX
-    - kubectl delete ingress/go-todo-ingress-$DEPLOY_SUFFIX
-  when: manual
-  except:
-    - master
+    - docker pull $CI_REGISTRY_IMAGE:$TAG
+    - docker tag $CI_REGISTRY_IMAGE:$TAG $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+update_manifest:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  retry: 2
+  script:
+    # Add SSH key to root
+    - mkdir -p /root/.ssh
+    - echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
+    - ssh-keyscan -H gitlab.com > /root/.ssh/known_hosts
+    - chmod 600 /root/.ssh/id_rsa
+    # Git
+    - apk add --no-cache git
+    - git config --global user.name $APP_NAME
+    - git config --global user.email $APP_NAME"@gitlab.com"
+    - git clone --single-branch --branch master $CD_GIT_REPO
+    - cd $CD_CHART_DIRECTORY
+    # Helm
+    - >
+      docker run --rm -v ${PWD}:/workdir mikefarah/yq:3.2.1 yq write
+      --inplace --verbose $CD_MANIFEST_FILE appVersion $IMAGE_TAG
+    - git commit -am "update image tag" && git push origin master
