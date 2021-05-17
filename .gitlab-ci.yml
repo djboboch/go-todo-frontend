@@ -39,8 +39,8 @@ tag_latest_image:
   variables:
     GIT_STRATEGY: none
   script:
-    - docker pull $CI_REGISTRY_IMAGE:$TAG
-    - docker tag $CI_REGISTRY_IMAGE:$TAG $CI_REGISTRY_IMAGE:latest
+    - docker pull $CI_REGISTRY_IMAGE:$IMAGE_TAG
+    - docker tag $CI_REGISTRY_IMAGE:$IMAGE_TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
 
 update_manifest:
