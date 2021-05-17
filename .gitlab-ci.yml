@@ -2,7 +2,10 @@ stages:
   - build
   - deploy
 
-image: docker:19-dind
+image: docker:20-dind
+services:
+  - name: docker:20-dind
+    command: ["--tls=false"]
 
 variables:
   DOCKER_HOST: tcp://docker:2375/
