@@ -24,7 +24,7 @@ after_script:
 build_image:
   stage: build
   variables:
-    BACKEND_URL: api.go-todo.chrupek.tech
+    BACKEND_URL: http://api.go-todo.chrupek.tech
   script:
     - apk add gettext
     - envsubst < example_build.env > .env
