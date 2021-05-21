@@ -44,6 +44,8 @@ tag_latest_image:
     - docker pull $CI_REGISTRY_IMAGE:$IMAGE_TAG
     - docker tag $CI_REGISTRY_IMAGE:$IMAGE_TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
 
 update_manifest:
   stage: deploy
@@ -67,3 +69,5 @@ update_manifest:
       docker run --rm -v ${PWD}:/workdir mikefarah/yq:3.2.1 yq write
       --inplace --verbose $CD_MANIFEST_FILE appVersion $IMAGE_TAG
     - git commit -am "update image tag" && git push origin master
+  only:
+    - master
